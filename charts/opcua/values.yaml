@@ -2,13 +2,27 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
-
 image:
-  repository: nginx
+  repository: 444505633365.dkr.ecr.eu-west-3.amazonaws.com/opcua-connector
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
+
+config:
+  appName: "opcua-connector"
+  appEnvironment: "production"
+  loggerLocal: "false"
+  opcuaServerHostname: ""
+  opcuaServerPort: ""
+  opcuaUserName: ""
+  opcuaPassword: ""
+  cronName: ""
+  cronExpression: ""
+  citronDataSourceValue: ""
+  citronExternalApiKey: ""
+  citronExternalApiEndpoint: ""
+  citronCallbackKey: ""
+  citronCallbackEndpoint: ""
 
 imagePullSecrets: []
 nameOverride: ""
@@ -31,33 +45,18 @@ podLabels: {}
 podSecurityContext: {}
   # fsGroup: 2000
 
-securityContext: {}
+# We can use the user 1000 and a readonly root filesystem for OPCUA
+securityContext:
+  runAsUser: 1000
+  readOnlyRootFilesystem: true
   # capabilities:
   #   drop:
   #   - ALL
-  # readOnlyRootFilesystem: true
   # runAsNonRoot: true
-  # runAsUser: 1000
 
-service:
-  type: ClusterIP
-  port: 80
-
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+service: {}
+  # type: NodePort
+  # port: 8080
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -71,21 +70,23 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
-livenessProbe:
-  httpGet:
-    path: /
-    port: http
+# readinessProbe configuration is intentionally set to use `ls` command. 
+# This is because OPC UA does not run continuously, and using `ls` is a lightweight method to check for the container's basic operational status.
 readinessProbe:
-  httpGet:
-    path: /
-    port: http
+  exec:
+    command: ["ls"]
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
 
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+# livenessProbe configuration also uses the `ls` command for similar reasons. 
+# It's a simple, non-intrusive way to ensure the container is still operational, given that OPC UA does not run continuously.
+livenessProbe:
+  exec:
+    command: ["ls"]
+  initialDelaySeconds: 15
+  periodSeconds: 10
+  timeoutSeconds: 5
 
 # Additional volumes on the output Deployment definition.
 volumes: []

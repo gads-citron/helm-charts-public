@@ -5,9 +5,7 @@ metadata:
   labels:
     {{- include "opcua.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  replicas: 1
   selector:
     matchLabels:
       {{- include "opcua.selectorLabels" . | nindent 6 }}
@@ -36,6 +34,35 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: CONFIG_APP_NAME
+            value: "{{ .Values.config.appName }}"
+          - name: CONFIG_APP_ENVIRONMENT
+            value: "{{ .Values.config.appEnvironment }}"
+          - name: CONFIG_LOGGER_LOCAL
+            value: "{{ .Values.config.loggerLocal }}"
+          - name: CONFIG_OPCUA_SERVER_HOSTNAME
+            value: "{{ .Values.config.opcuaServerHostname }}"
+          - name: CONFIG_OPCUA_SERVER_PORT
+            value: "{{ .Values.config.opcuaServerPort }}"
+          - name: CONFIG_OPCUA_USER_NAME
+            value: "{{ .Values.config.opcuaUserName }}"
+          - name: CONFIG_OPCUA_PASSWORD
+            value: "{{ .Values.config.opcuaPassword }}"
+          - name: CONFIG_CRON_NAME
+            value: "{{ .Values.config.cronName }}"
+          - name: CONFIG_CRON_EXPRESSION
+            value: "{{ .Values.config.cronExpression }}"
+          - name: CONFIG_CITRON_DATA_SOURCE_VALUE
+            value: "{{ .Values.config.citronDataSourceValue }}"
+          - name: CONFIG_CITRON_EXTERNAL_API_KEY
+            value: "{{ .Values.config.citronExternalApiKey }}"
+          - name: CONFIG_CITRON_EXTERNAL_API_ENDPOINT
+            value: "{{ .Values.config.citronExternalApiEndpoint }}"
+          - name: CONFIG_CITRON_CALLBACK_KEY
+            value: "{{ .Values.config.citronCallbackKey }}"
+          - name: CONFIG_CITRON_CALLBACK_ENDPOINT
+            value: "{{ .Values.config.citronCallbackEndpoint }}"
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
@@ -48,10 +75,13 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}
           volumeMounts:
+            - name: local
+              mountPath: /opcua
             {{- toYaml . | nindent 12 }}
           {{- end }}
       {{- with .Values.volumes }}
       volumes:
+        - name: local
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.nodeSelector }}
