@@ -63,10 +63,12 @@ spec:
             value: "{{ .Values.config.citronCallbackKey }}"
           - name: CONFIG_CITRON_CALLBACK_ENDPOINT
             value: "{{ .Values.config.citronCallbackEndpoint }}"
+          {{- if .Values.service.port }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          {{- end }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
