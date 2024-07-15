@@ -83,7 +83,8 @@ spec:
           {{- end }}
       {{- with .Values.volumes }}
       volumes:
-        - name: local
+        - emptyDir: {}
+          name: local
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.nodeSelector }}
