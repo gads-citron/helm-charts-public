@@ -2,5 +2,5 @@ apiVersion: v2
 name: opcua
 description: A Helm chart for Kubernetes to deploy Citron OPCUA connector
 type: application
-version: 0.3.0
+version: 0.4.0
 appVersion: "0.1.0"
