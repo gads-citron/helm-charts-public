@@ -14,6 +14,16 @@ entries:
   opcua:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2024-08-06T09:25:25.715099483Z"
+    description: A Helm chart for Kubernetes to deploy Citron OPCUA connector
+    digest: df2e7248540feca9024ee8e08a456ab127156ca66539ea9e2353c830dfe6bbb7
+    name: opcua
+    type: application
+    urls:
+    - https://github.com/gads-citron/helm-charts-public/releases/download/opcua-0.6.0/opcua-0.6.0.tgz
+    version: 0.6.0
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2024-08-01T07:19:28.576148179Z"
     description: A Helm chart for Kubernetes to deploy Citron OPCUA connector
     digest: 5c65edcba1a5eea0c7bec9b70ae38fe76b655c90d95bbd4e34af24c8edb43da1
@@ -62,4 +72,4 @@ entries:
     urls:
     - https://github.com/gads-citron/helm-charts-public/releases/download/opcua-0.1.0/opcua-0.1.0.tgz
     version: 0.1.0
-generated: "2024-08-01T07:19:28.576168758Z"
+generated: "2024-08-06T09:25:25.715137114Z"
