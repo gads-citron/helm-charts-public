@@ -57,14 +57,27 @@ spec:
             value: "{{ .Values.config.cronExpression }}"
           - name: CONFIG_CITRON_DATA_SOURCE_VALUE
             value: "{{ .Values.config.citronDataSourceValue }}"
-          - name: CONFIG_CITRON_EXTERNAL_API_KEY
-            value: "{{ .Values.config.citronExternalApiKey }}"
           - name: CONFIG_CITRON_EXTERNAL_API_ENDPOINT
             value: "{{ .Values.config.citronExternalApiEndpoint }}"
-          - name: CONFIG_CITRON_CALLBACK_KEY
-            value: "{{ .Values.config.citronCallbackKey }}"
           - name: CONFIG_CITRON_CALLBACK_ENDPOINT
             value: "{{ .Values.config.citronCallbackEndpoint }}"
+          {{- if not (eq .Values.config.secretProviderClassName "") }}
+          - name: CONFIG_CITRON_EXTERNAL_API_KEY
+            valueFrom:
+              secretKeyRef:
+                key: CONFIG_CITRON_EXTERNAL_API_KEY
+                name: "{{ .Values.config.secretProviderClassName}}"
+          - name: CONFIG_CITRON_CALLBACK_KEY
+            valueFrom:
+              secretKeyRef:
+                key: CONFIG_CITRON_CALLBACK_KEY
+                name: "{{ .Values.config.secretProviderClassName}}"
+          {{- else }}
+          - name: CONFIG_CITRON_EXTERNAL_API_KEY
+            value: "{{ .Values.config.citronExternalApiKey }}"
+          - name: CONFIG_CITRON_CALLBACK_KEY
+            value: "{{ .Values.config.citronCallbackKey }}"
+          {{- end }}
           {{- if .Values.service.port }}
           ports:
             - name: http

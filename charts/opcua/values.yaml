@@ -23,6 +23,7 @@ config:
   citronExternalApiEndpoint: ""
   citronCallbackKey: ""
   citronCallbackEndpoint: ""
+  secretProviderClassName: ""
 
 imagePullSecrets: []
 nameOverride: ""
