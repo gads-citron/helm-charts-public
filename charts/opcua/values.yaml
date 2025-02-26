@@ -6,7 +6,7 @@ image:
   repository: 444505633365.dkr.ecr.eu-west-3.amazonaws.com/opcua-connector
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "prd-v1.0.7"
+  tag: "prd-v1.0.8"
 
 config:
   appName: "opcua-connector"
